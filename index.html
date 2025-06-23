@@ -7,109 +7,125 @@
     <!-- Tailwind CSS CDN for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Apply Inter font to the body */
+        /* Base styling for the body */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* Use Inter font */
             margin: 0;
             padding: 0;
-            /* Ensure full viewport height */
-            min-height: 100vh;
+            min-height: 100vh; /* Ensure full viewport height */
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Prevent body scroll, page content will scroll if needed */
+            overflow: hidden; /* Prevent body scroll, individual pages will handle scrolling */
         }
 
-        /* Base styling for all pages/screens */
+        /* Styling for the main application container */
+        #app-container {
+            position: relative; /* Allows absolute positioning of child pages */
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        /* Common styles for all pages/screens */
         .page {
-            display: none; /* Hidden by default, JavaScript controls visibility */
-            width: 100vw; /* Full viewport width */
+            display: none; /* Hidden by default */
+            width: 100%; /* Full width of parent container */
             min-height: 100vh; /* Minimum full viewport height */
-            padding: 1.5rem; /* Consistent padding */
-            box-sizing: border-box; /* Include padding in element's total width and height */
-            justify-content: center; /* Center content horizontally */
-            align-items: center; /* Center content vertically */
-            text-align: center; /* Center text */
-            flex-direction: column; /* Stack content vertically */
-            transition: opacity 0.5s ease-in-out; /* Smooth transition for page changes */
-            opacity: 0; /* Start hidden for transition */
-            position: absolute; /* Position pages absolutely within the container */
+            padding: 2rem 1rem; /* More vertical padding, slightly less horizontal for small screens */
+            box-sizing: border-box;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease-in-out; /* Smooth fade effect */
+            opacity: 0;
+            position: absolute; /* Position absolutely within app-container */
             top: 0;
             left: 0;
+            /* Ensure content can scroll if it exceeds viewport height */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
 
-        /* Show active page */
+        /* Active page visibility */
         .page.active {
-            display: flex; /* Display as flex container when active */
-            opacity: 1; /* Fully visible when active */
+            display: flex;
+            opacity: 1;
         }
 
-        /* Custom spinner animation for loading screen */
+        /* Spinner animation for loading screen */
         .spinner {
-            border: 8px solid rgba(255, 255, 255, 0.3); /* Light grey border for the track */
-            border-top: 8px solid #4ade80; /* Green border for the spinning part (a vibrant color for progress) */
-            border-radius: 50%; /* Make it circular */
-            width: 60px; /* Size of the spinner */
-            height: 60px;
-            animation: spin 1.5s linear infinite; /* Spin animation */
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #6ee7b7; /* Lighter green for better contrast */
+            border-radius: 50%;
+            width: 80px; /* Larger spinner for better visibility */
+            height: 80px;
+            animation: spin 1.2s linear infinite; /* Faster spin */
         }
 
-        /* Keyframes for the spinner animation */
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        /* Style for buttons to give them a modern, interactive look */
+        /* Button base styling */
         .app-button {
-            @apply px-8 py-3 mt-8 text-lg font-semibold rounded-full shadow-lg transition-all duration-300 ease-in-out transform;
+            @apply w-full sm:w-auto px-10 py-4 mt-8 text-xl font-bold rounded-full shadow-lg transition-all duration-300 ease-in-out transform;
+            /* Increased size and padding for better touch targets on mobile */
+            letter-spacing: 0.05em; /* Slightly wider letter spacing */
+            /* Add subtle 3D effect on press */
+            &:active {
+                @apply translate-y-0.5 shadow-md;
+            }
         }
 
         .app-button:hover {
-            @apply scale-105 shadow-xl;
+            @apply scale-105 shadow-2xl;
         }
 
-        /* Specific button styling for primary actions */
+        /* Primary button style */
         .app-button-primary {
             @apply bg-white text-purple-700 hover:bg-gray-100;
         }
 
-        /* Specific button styling for secondary actions */
+        /* Secondary button style */
         .app-button-secondary {
-            @apply bg-purple-500 text-white hover:bg-purple-600;
+            @apply bg-gradient-to-r from-purple-600 to-indigo-700 text-white hover:from-purple-700 hover:to-indigo-800;
         }
 
-        /* Ensure results page content can scroll if it overflows */
+        /* Specific styles for the results page content to ensure readability and layout */
         #analysisResults {
             justify-content: flex-start; /* Align content to the top */
-            align-items: flex-start; /* Align content to the left */
-            text-align: left; /* Align text to the left */
-            overflow-y: auto; /* Allow vertical scrolling */
+            align-items: center; /* Center items horizontally within the page */
+            text-align: left; /* Align text within sections to the left */
         }
 
-        /* Styling for the camera placeholder image */
+        /* Adjust max-width for content on larger screens, ensuring it doesn't get too wide */
+        .content-container {
+            @apply w-full max-w-4xl mx-auto;
+        }
+
+        /* Styling for the camera placeholder image for responsiveness */
         #camera-feed-placeholder {
-            max-width: 90vw; /* Ensure it fits within viewport width */
-            max-height: 50vh; /* Limit height for better mobile layout */
-            width: auto;
-            height: auto;
-            object-fit: contain; /* Contain the image within its bounds */
-            border-radius: 0.75rem; /* Rounded corners */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            max-width: 90vw;
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 1rem; /* More rounded corners */
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2), 0 5px 10px -5px rgba(0, 0, 0, 0.1); /* Stronger shadow */
+            object-fit: cover; /* Cover the area, potentially cropping */
         }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
     <!-- Main application container -->
-    <div id="app-container" class="relative min-h-screen w-screen">
+    <div id="app-container">
 
         <!-- 1. Landing Page -->
-        <div id="landingPage" class="page bg-gradient-to-br from-indigo-600 to-purple-800 text-white active">
-            <div class="space-y-6 max-w-2xl mx-auto">
-                <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight drop-shadow-lg">
+        <div id="landingPage" class="page bg-gradient-to-br from-indigo-700 to-purple-900 text-white active">
+            <div class="content-container space-y-8 flex flex-col items-center">
+                <h1 class="text-7xl sm:text-8xl md:text-9xl font-extrabold tracking-tighter drop-shadow-lg leading-tight">
                     RAVERSUS
                 </h1>
-                <p class="text-2xl md:text-3xl font-light opacity-90 leading-relaxed">
-                    Unlocking the Secrets of Your Eye for Holistic Wellness
+                <p class="text-xl sm:text-2xl md:text-3xl font-light opacity-90 leading-relaxed max-w-lg">
+                    Discover Inner Balance: Your Journey to Holistic Eye Wellness Begins Here.
                 </p>
                 <button id="startAnalysisBtn" class="app-button app-button-primary">
                     Start Your Eye Analysis
@@ -119,20 +135,20 @@
 
         <!-- 2. Camera Capture Page -->
         <div id="cameraCapture" class="page bg-gray-100 text-gray-800">
-            <div class="space-y-6 max-w-2xl mx-auto">
-                <h2 class="text-4xl font-bold mb-6 text-indigo-700">Capture Your Eye</h2>
-                <div class="relative w-full aspect-video bg-gray-300 rounded-xl overflow-hidden flex items-center justify-center shadow-lg">
+            <div class="content-container space-y-8 flex flex-col items-center">
+                <h2 class="text-4xl sm:text-5xl font-bold text-indigo-700 mb-4">Capture Your Eye</h2>
+                <div class="relative w-full max-w-xl aspect-video bg-gray-300 rounded-2xl overflow-hidden flex items-center justify-center shadow-2xl border-4 border-gray-400">
                     <!-- Placeholder for camera feed -->
                     <img id="camera-feed-placeholder"
-                         src="https://placehold.co/600x400/D1D5DB/4B5563?text=Eye+Capture+Area"
+                         src="https://placehold.co/800x600/D1D5DB/4B5563?text=Align+Your+Eye+Here"
                          alt="Camera Feed Placeholder"
                          class="w-full h-full object-cover">
-                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white text-lg font-medium rounded-xl">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white text-xl sm:text-2xl font-semibold rounded-2xl">
                         Simulated Camera Feed
                     </div>
                 </div>
-                <p class="text-lg text-gray-600 mt-4">
-                    Position your eye clearly in the frame.
+                <p class="text-lg sm:text-xl text-gray-700 max-w-md mt-4">
+                    Please align your eye within the frame. In a real app, your device camera would activate here.
                 </p>
                 <button id="takePhotoBtn" class="app-button app-button-secondary">
                     Take Photo
@@ -142,74 +158,74 @@
 
         <!-- 3. Loading Analysis Page -->
         <div id="loadingAnalysis" class="page bg-gray-900 text-white">
-            <div class="space-y-6 max-w-lg mx-auto flex flex-col items-center">
+            <div class="content-container space-y-8 flex flex-col items-center">
                 <div class="spinner"></div>
-                <h2 class="text-4xl font-bold mt-6">Analyzing Your Eyes...</h2>
-                <p class="text-lg opacity-80">
-                    Please wait while our AI processes your unique eye signature.
+                <h2 class="text-4xl sm:text-5xl font-bold mt-8">Analyzing Your Eyes...</h2>
+                <p class="text-lg sm:text-xl opacity-80 max-w-lg">
+                    Our advanced AI is processing your unique eye signature. This will only take a moment.
                 </p>
-                <div class="w-full bg-gray-700 rounded-full h-2.5 mt-4">
-                    <div id="progressBar" class="bg-green-400 h-2.5 rounded-full" style="width: 0%"></div>
+                <div class="w-full max-w-md bg-gray-700 rounded-full h-3 mt-6 shadow-inner">
+                    <div id="progressBar" class="bg-green-400 h-3 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
                 </div>
             </div>
         </div>
 
         <!-- 4. Analysis Results Page -->
-        <div id="analysisResults" class="page bg-white text-gray-800 p-8 md:p-12">
-            <div class="w-full max-w-4xl mx-auto space-y-10">
-                <h2 class="text-5xl font-extrabold text-purple-700 mb-8 text-center">Your RAVERSUS Analysis</h2>
+        <div id="analysisResults" class="page bg-white text-gray-800 py-8 md:py-12">
+            <div class="content-container space-y-12">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-purple-700 text-center mb-8">Your RAVERSUS Analysis</h2>
 
                 <!-- Iridology Findings Section -->
-                <section class="bg-purple-50 p-6 rounded-2xl shadow-xl border border-purple-200">
-                    <h3 class="text-3xl font-bold text-purple-600 mb-4 flex items-center">
-                        <svg class="w-8 h-8 mr-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.01 12.01 0 002.944 12c.046 2.059.565 4.034 1.41 5.865a11.925 11.925 0 007.411 2.575 11.925 11.925 0 007.411-2.575c.845-1.831 1.364-3.806 1.41-5.865a12.01 12.01 0 00-3.096-7.056z"></path></svg>
+                <section class="bg-purple-50 p-6 sm:p-8 rounded-2xl shadow-xl border border-purple-200">
+                    <h3 class="text-3xl sm:text-4xl font-bold text-purple-600 mb-6 flex items-center">
+                        <svg class="w-10 h-10 mr-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.01 12.01 0 002.944 12c.046 2.059.565 4.034 1.41 5.865a11.925 11.925 0 007.411 2.575 11.925 11.925 0 007.411-2.575c.845-1.831 1.364-3.806 1.41-5.865a12.01 12.01 0 00-3.096-7.056z"></path></svg>
                         Iridology Findings
                     </h3>
-                    <ul class="list-disc list-inside text-lg text-gray-700 space-y-2">
+                    <ul class="list-disc list-inside text-lg sm:text-xl text-gray-700 space-y-4">
                         <li>
-                            <strong class="text-indigo-600">Minor Pigmentation in Iris:</strong> Indicates a slight predisposition to liver detoxification challenges. (Severity: Low)
+                            <strong class="text-indigo-600">Minor Pigmentation in Iris:</strong> Suggests a slight predisposition to liver detoxification challenges. <span class="font-semibold text-sm text-gray-500">(Severity: Low)</span>
                         </li>
                         <li>
-                            <strong class="text-indigo-600">Stress Rings Observed:</strong> Suggests a history of nervous tension or stress accumulation. (Severity: Moderate)
+                            <strong class="text-indigo-600">Stress Rings Observed:</strong> Indicates a history of nervous tension or stress accumulation. <span class="font-semibold text-sm text-gray-500">(Severity: Moderate)</span>
                         </li>
                         <li>
-                            <strong class="text-indigo-600">Slight Lymphatic Congestion:</strong> Evident by a subtle "cloudiness" in the lymphatic zone. (Severity: Low)
+                            <strong class="text-indigo-600">Slight Lymphatic Congestion:</strong> Evident by a subtle "cloudiness" in the lymphatic zone. <span class="font-semibold text-sm text-gray-500">(Severity: Low)</span>
                         </li>
                         <li>
-                            <strong class="text-indigo-600">Digestive Zone Weakness:</strong> A subtle radial furrowing in the digestive area indicates potential for occasional digestive discomfort. (Severity: Moderate)
+                            <strong class="text-indigo-600">Digestive Zone Weakness:</strong> A subtle radial furrowing in the digestive area indicates potential for occasional digestive discomfort. <span class="font-semibold text-sm text-gray-500">(Severity: Moderate)</span>
                         </li>
                     </ul>
-                    <p class="mt-4 text-sm text-gray-500 italic">
-                        *Note: Iridology is a complementary health assessment tool and not a diagnostic method. Consult a healthcare professional for medical advice.*
+                    <p class="mt-6 text-sm italic text-gray-600 bg-purple-100 p-3 rounded-lg border border-purple-300">
+                        *Disclaimer: Iridology is a complementary health assessment tool and not a diagnostic method. Always consult a qualified healthcare professional for medical advice or health concerns.*
                     </p>
                 </section>
 
                 <!-- Treatment Recommendations Section -->
-                <section class="bg-green-50 p-6 rounded-2xl shadow-xl border border-green-200">
-                    <h3 class="text-3xl font-bold text-green-600 mb-4 flex items-center">
-                        <svg class="w-8 h-8 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4.343 19.657l-.707.707M1 12h1m6.364-1.636l-.707-.707M12 21v-1m-6.364-1.636l-.707-.707M3 12l-.707.707"></path></svg>
+                <section class="bg-green-50 p-6 sm:p-8 rounded-2xl shadow-xl border border-green-200">
+                    <h3 class="text-3xl sm:text-4xl font-bold text-green-600 mb-6 flex items-center">
+                        <svg class="w-10 h-10 mr-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4.343 19.657l-.707.707M1 12h1m6.364-1.636l-.707-.707M12 21v-1m-6.364-1.636l-.707-.707M3 12l-.707.707"></path></svg>
                         Personalized Recommendations
                     </h3>
-                    <ul class="list-disc list-inside text-lg text-gray-700 space-y-2">
+                    <ul class="list-disc list-inside text-lg sm:text-xl text-gray-700 space-y-4">
                         <li>
-                            <strong class="text-emerald-600">Liver Support:</strong> Incorporate more bitter greens (dandelion, arugula), turmeric, and lemon water into your diet.
+                            <strong class="text-emerald-600">Liver Support:</strong> Integrate a diet rich in bitter greens (e.g., dandelion, kale), lean proteins, and stay well-hydrated. Consider natural liver cleanses.
                         </li>
                         <li>
-                            <strong class="text-emerald-600">Stress Management:</strong> Practice daily mindfulness meditation or deep breathing exercises for 10-15 minutes. Consider herbal adaptogens like Ashwagandha.
+                            <strong class="text-emerald-600">Stress Management:</strong> Dedicate 15-20 minutes daily to calming activities like meditation, deep breathing, or gentle yoga.
                         </li>
                         <li>
-                            <strong class="text-emerald-600">Lymphatic Drainage:</strong> Engage in light exercise like brisk walking or rebounding. Dry brushing before showering can also be beneficial.
+                            <strong class="text-emerald-600">Lymphatic Drainage:</strong> Engage in regular, moderate physical activity such as brisk walking or swimming. Ensure adequate hydration.
                         </li>
                         <li>
-                            <strong class="text-emerald-600">Digestive Health:</strong> Focus on probiotic-rich foods (yogurt, kimchi), fermented vegetables, and chew food thoroughly. Consider digestive enzyme support.
+                            <strong class="text-emerald-600">Digestive Health:</strong> Emphasize whole, unprocessed foods. Include fermented foods like sauerkraut or kimchi for gut flora support.
                         </li>
                         <li>
-                            <strong class="text-emerald-600">Hydration:</strong> Increase daily water intake to at least 8 glasses, preferably filtered.
+                            <strong class="text-emerald-600">Holistic Hydration:</strong> Increase your intake of filtered water and herbal teas throughout the day.
                         </li>
                     </ul>
                 </section>
 
-                <button id="backToHomeBtn" class="app-button app-button-secondary w-full">
+                <button id="backToHomeBtn" class="app-button app-button-secondary w-full sm:w-auto">
                     Back to Home
                 </button>
             </div>
@@ -254,26 +270,27 @@
                 currentPage = pageId; // Update current page state
             }
 
-            // Specific logic for loading page
+            // Specific logic for loading page to simulate progress
             if (pageId === 'loadingAnalysis') {
-                // Reset progress bar
-                progressBar.style.width = '0%';
+                progressBar.style.width = '0%'; // Reset progress bar
                 let progress = 0;
+                const totalDuration = 3500; // Total duration for loading (3.5 seconds)
+                const intervalTime = 50; // Update every 50ms
+
+                const progressStep = (100 / (totalDuration / intervalTime));
+
                 const interval = setInterval(() => {
-                    progress += Math.random() * 10; // Simulate incremental progress
-                    if (progress > 100) {
+                    progress += progressStep;
+                    if (progress >= 100) {
                         progress = 100;
-                        clearInterval(interval);
+                        clearInterval(interval); // Stop the progress bar animation
+                        // After progress completes, transition to analysis results
+                        setTimeout(() => {
+                             showPage('analysisResults');
+                        }, 300); // Small delay before showing results to ensure full bar
                     }
                     progressBar.style.width = progress + '%';
-                }, 150); // Update every 150ms
-
-                // Simulate AI processing time before navigating to results
-                // This duration should be longer than the progress bar animation
-                setTimeout(() => {
-                    clearInterval(interval); // Ensure interval is cleared if not already 100%
-                    showPage('analysisResults');
-                }, 3000); // Simulate 3 seconds of "analysis"
+                }, intervalTime);
             }
         }
 
@@ -286,8 +303,8 @@
 
         // Camera Capture Page: Take Photo button
         takePhotoBtn.addEventListener('click', () => {
-            // In a real app, this would trigger camera access and photo capture.
-            // Here, we simulate by directly moving to the loading screen.
+            // In a real application, this would involve actual camera access.
+            // For this demo, it simulates capturing and moves to loading.
             showPage('loadingAnalysis');
         });
 
@@ -297,11 +314,10 @@
         });
 
         // Initial call to display the landing page when the script loads
-        // The landing page is already active in HTML, but this ensures JS consistency.
+        // Ensures the correct page is displayed on first load or refresh.
         window.onload = () => {
             showPage(currentPage);
         };
-
     </script>
 </body>
 </html>
